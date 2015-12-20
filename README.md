@@ -43,7 +43,7 @@ It currently realizes a π/8 gate, a controlled-not gate and the Hadamard gate. 
 #### NOTE: this is a classical simulation of a quantum system and so n Qubits requires 2^n complex numbers with each operation affecting every one of those complex numbers.
 
 
-## Contributors and Accredation
+## Contributors and Accreditation
 
 Based on the concepts portrayed by Michael Nielsen's fantastic talk at the [2009 singularity summit](https://www.youtube.com/watch?v=vykoKInjuPY).
 
