@@ -42,6 +42,7 @@ class Psi:
             # find out whether that amplitude corresponds to the qubit being
             # zero or one
             if (i >> qubit) % 2 == 0:  # if zero
+                print(str(i >> qubit % 2) + "")
                 self.amplitudes[i] *= exp(-1j * pi / 8)
             else:  # if one
                 self.amplitudes[i] *= exp(1j * pi / 8)
