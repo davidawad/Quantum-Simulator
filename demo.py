@@ -7,11 +7,9 @@ if __name__ == "__main__":
     # set up a system with 3 qubits
     psi = quantum.Psi(3)
 
+    psi.pi_over_eight(1)
+
     print(psi.amplitudes)
-
-    psi.pi_over_eight(5)
-
-#    print()
 
     # apply Hadamard gate to qubit 1 (second qubit)
     # psi.hadamard(1)
