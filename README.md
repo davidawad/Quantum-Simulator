@@ -9,19 +9,19 @@ This project aims to simply simulate quantum gates so you might determine the us
 ```python
 import quantum
 
-# set up a system with 3 qubits
+# set up a system with 3 Qubits
 psi = quantum.Psi(3)
 
-# apply Hadamard gate to qubit 1 (second qubit)
+# apply Hadamard gate to Qubit 1 (second qubit)
 psi.hadamard(1)
 
-# apply Hadamard gate to qubit 2 (third qubit)
+# apply Hadamard gate to Qubit 2 (third qubit)
 psi.hadamard(2)
 
-# apply π/8 gate to qubit 1
+# apply π/8 gate to Qubit 1
 psi.pi_over_eight(1)
 
-# apply controlled-not gate with qubit 1 controlling qubit 0
+# apply controlled-not gate with Qubit 1 controlling Qubit 0
 psi.controlled_not(1, 0)
 
 # collapse and print the result (a tuple of 3 classical bits)
@@ -50,7 +50,9 @@ Based on the concepts portrayed by Michael Nielsen's fantastic talk at the [2009
 Inspired by code samples from [jatuber](https://github.com/jtauber/quantumpy) and [limitedmage](https://gist.github.com/limitedmage/945473)
 
 
-## Resources
+## Resources:
 [The Qubit Wiki Page](https://en.wikipedia.org/wiki/Qubit)
 
-[The basics of ion trap quantum computing](https://www2.physics.ox.ac.uk/research/ion-trap-quantum-computing-group/intro-to-ion-trap-qc)
+[Quantum Gates](https://en.wikipedia.org/wiki/Quantum_gate)
+
+[The basics of Ion Trap Quantum Computing](https://www2.physics.ox.ac.uk/research/ion-trap-quantum-computing-group/intro-to-ion-trap-qc)
