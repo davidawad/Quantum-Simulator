@@ -26,6 +26,8 @@ psi.controlled_not(1, 0)
 
 # collapse and print the result (a tuple of 3 classical bits)
 print(psi.collapse())
+
+(0, 0, 1)
 ```
 
 
