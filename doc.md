@@ -8,16 +8,16 @@
 
 It's like a lookup table that looks like this for 3 qubits. Having 2^n possible states
 
-| Q1  | Q2 | Q3 | state index + 1|
-|:---:|:--:|:--:|  :---:         | 
-| 0   |  0 | 0  | - position 1   |
-| 0   |  0 | 1  | - position 2   |
-| 0   |  1 | 0  | - position 3   |
-| 0   |  1 | 1  | - position 4   |
-| 1   |  0 | 0  | - position 5   |
-| 1   |  0 | 1  | - position 6   |
-| 1   |  1 | 0  | - position 7   |
-| 1   |  1 | 1  | - position 8   |  
+| Q1 | Q2 | Q3 | state index + 1|
+|:--:|:--:|:--:|:--------------:| 
+| 0  |  0 | 0  | - position 1   |
+| 0  |  0 | 1  | - position 2   |
+| 0  |  1 | 0  | - position 3   |
+| 0  |  1 | 1  | - position 4   |
+| 1  |  0 | 0  | - position 5   |
+| 1  |  0 | 1  | - position 6   |
+| 1  |  1 | 0  | - position 7   |
+| 1  |  1 | 1  | - position 8   |  
 
 
 ```python
