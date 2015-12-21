@@ -36,11 +36,10 @@ class Psi:
         takes in a possible state of the system such as '010' and returns
         the amplitude of that possible state.
         """
-        if state.length > (1 >> self.num_qubits):
+        if len(state) > (1 << self.num_qubits):
             raise ValueError("State doesn't exist")
-        # grab binary representation of state, add 1 for zero indexed array
-        wave_index = int(state, 2) + 1
-        return self.amplitudes[wave_index]
+        # grab binary representation of state, access that array position
+        return self.amplitudes[int(state, 2)]
 
     def probability(self, state):
         """
