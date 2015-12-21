@@ -31,6 +31,23 @@ class Psi:
                 self.amplitudes[i] = 1
                 return tuple((i >> bit) % 2 for bit in range(self.num_qubits))
 
+    def amplitude(self, state):
+        """
+        takes in a possible state of the system such as '010' and returns
+        the amplitude of that possible state.
+        """
+        if state.length > (1 >> self.num_qubits):
+            raise ValueError("State doesn't exist")
+        # grab binary representation of state, add 1 for zero indexed array
+        wave_index = int(state, 2) + 1
+        return self.amplitudes[wave_index]
+
+    def probability(self, state):
+        """
+        simply returns the squared value of the amplitude for a given state
+        """
+        return abs(self.amplitude(state))**2
+
     def pi_over_eight(self, qubit):
         """
         applies a π/8 gate to the given qubit
