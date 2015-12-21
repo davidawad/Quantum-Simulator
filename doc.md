@@ -5,23 +5,24 @@
 #### Remember, with quantum gates the amplitudes are all being changed at once. When this loop happens, we're editing the amplitudes of all of the qubits in the system at any given time.
 
 
+
+It's like a lookup table that looks like this for 3 qubits. Having 2^n possible states
+
+| Q1  | Q2 | Q3 | state index + 1|
+|:---:|:--:|:--:|  :---:         | 
+| 0   |  0 | 0  | - position 1   |
+| 0   |  0 | 1  | - position 2   |
+| 0   |  1 | 0  | - position 3   |
+| 0   |  1 | 1  | - position 4   |
+| 1   |  0 | 0  | - position 5   |
+| 1   |  0 | 1  | - position 6   |
+| 1   |  1 | 0  | - position 7   |
+| 1   |  1 | 1  | - position 8   |  
+
+
 ```python
 num_qubits = 3
 
-
-"""
-It's like a lookup table that looks like this for 3 qubits
-
-    1 2 3
-    0 0 0 - position 1
-    0 0 1 - position 2
-    0 1 0 - position 3
-    0 1 1 - position 4
-    1 0 0 - position 5
-    1 0 1 - position 6
-    1 1 0 - position 7
-    1 1 1 - position 8  <- position 2^n
-"""
 # the pi over 8 gate's implementation
 def pi_over_eight(qubit):
     # go through each amplitude
