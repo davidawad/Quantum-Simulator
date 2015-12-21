@@ -15,7 +15,7 @@ class Psi:
         # In this classical simulation,we use 2^n Qubit complex numbers
         # this array of size 2^n will replicate the 2^n states Qubits can have
         self.amplitudes = [0] * (1 << num_qubits)  # use bitshift to realize 2^n
-        self.amplitudes[0] = 1  # so that sum of squared prob. is 1
+        self.amplitudes[0] = 1  # so that sum of squared prob. is 1, starting in 000 state
 
     def collapse(self):
         """
@@ -36,15 +36,15 @@ class Psi:
         takes in a possible state of the system such as '010' and returns
         the amplitude of that possible state.
         """
-        if state.length > (1 >> self.num_qubits):
+        if len(state) > (1 << self.num_qubits):
             raise ValueError("State doesn't exist")
-        # grab binary representation of state, add 1 for zero indexed array
-        wave_index = int(state, 2) + 1
-        return self.amplitudes[wave_index]
+        # grab binary representation of state, access that array position
+        return self.amplitudes[int(state, 2)]
 
     def probability(self, state):
         """
-        simply returns the squared value of the amplitude for a given state
+        simply returns the square of the absolute value
+        of the amplitude for a given state
         """
         return abs(self.amplitude(state))**2
 
