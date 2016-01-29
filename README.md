@@ -9,25 +9,25 @@ This project aims to simply simulate quantum gates so you might determine the us
 ```python
 import quantum
 
-# set up a system with 3 Qubits
-psi = quantum.Psi(3)
+# set up a system with 3 Qubits, 1 indexed for simplicity
+psi = quantum.System(3)
 
-# apply Hadamard gate to Qubit 1 (second qubit)
+# apply Hadamard gate to Qubit 1
 psi.hadamard(1)
 
-# apply Hadamard gate to Qubit 2 (third qubit)
+# apply Hadamard gate to Qubit 2
 psi.hadamard(2)
 
 # apply π/8 gate to Qubit 1
 psi.pi_over_eight(1)
 
-# apply controlled-not gate with Qubit 1 controlling Qubit 0
-psi.controlled_not(1, 0)
+# apply controlled-not gate with Qubit 1 controlling Qubit 2
+psi.controlled_not(1, 2)
 
 # collapse and print the result (a tuple of 3 classical bits)
 print(psi.collapse())
 
-(0, 0, 1)
+001
 ```
 
 
@@ -41,8 +41,7 @@ It currently realizes a π/8 gate, a controlled-not gate and the Hadamard gate. 
 
 
 
-
-#### NOTE: this is a classical simulation of a quantum system and so n Qubits requires 2^n complex numbers with each operation affecting every one of those complex numbers.
+#### NOTE: this is a classical simulation of a quantum system and so n Qubits requires 2^n complex amplitudes with each operation affecting every one of those amplitudes. 
 
 
 ## Contributors and Accreditation

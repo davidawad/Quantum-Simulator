@@ -5,7 +5,23 @@ from cmath import exp, pi, sqrt
 from random import random
 import itertools
 
-class Psi:
+def vectorflip(bitstring):
+    """
+        returns flipped bits in a given string
+    """
+    if not bitstring: raise TypeError("vectorflip passed None")
+    return ''.join('1' if x == '0' else '0' for x in bitstring)
+
+def bitflip(bitstring, qubit):
+    """
+        returns opposite state for a specific qubit
+    """
+    if not bitstring or not qubit: raise TypeError("bitflip passed None")
+    arr = list(bitstring)
+    arr[qubit-1] = '1' if qubit is '0' else '0'
+    return ''.join(arr)
+
+class System:
     """
         This class represents the wave function describing a
         basic quantum computer consisting of n qubits.
@@ -20,7 +36,7 @@ class Psi:
         # this array of size 2^n will replicate the 2^n states Qubits can have
         self.amplitudes = [0] * (1 << num_qubits)  # use bitshift to realize 2^n
         self.amplitudes[0] = 1  # so that sum of prob.s is 1, starting in 000 state
-        self.states = self.generate_states()
+        self.states = self.generate_states(num_qubits)
 
     def generate_states(self, num_qubits):
         """
@@ -33,38 +49,42 @@ class Psi:
         tuples = [''.join(_) for _ in itertools.product(['0', '1'], repeat=num_qubits)]
         data = {}
         map(lambda x: data.update({x:0}), tuples)
+        # so that sum of squared amplitudes is 1, assume starting in 000 state
+        data['000'] = 1
         return data
 
     def collapse(self):
         """
-        collapse the system (i.e. measure it) and return a tuple
-        of the bits.
+        collapse the system (i.e. measure it) and return the state
+        based on a random choice from the weighted distribution
         """
-        weights = [abs(amp) ** 2 for amp in self.amplitudes]
-        choice = random() * sum(weights)
-        for i, w in enumerate(weights):
-            choice -= w
-            if choice < 0:
-                self.amplitudes = [0] * (1 << self.num_qubits)
-                self.amplitudes[i] = 1
-                return tuple((i >> bit) % 2 for bit in range(self.num_qubits))
+        total = 0
+        r = random()
+        for state in self.states.keys():
+            total += abs(self.states[state])**2
+            if r <= total: # randomly selected weighted number
+                # reset amplitudes after system collapse
+                self.states = { x:0 for x in self.states }
+                self.states['000'] = 1
+                return state
 
     def amplitude(self, state):
         """
         takes in a possible state of the system such as '010' and returns
         the amplitude of that possible state.
         """
-        if len(state) > (1 << self.num_qubits):
+        if len(state) > num_qubits:
             raise ValueError("State doesn't exist")
         # grab binary representation of state, access that array position
-        return self.amplitudes[int(state, 2)]
+        return self.states[state]
 
     def probability(self, state):
         """
         simply returns the square of the absolute value
         of the amplitude for a given state
         """
-        return abs(self.amplitude(state))**2
+        if not state: raise TypeError("state passed as None")
+        return abs(self.states[state])**2
 
     def pi_over_eight(self, qubit):
         """
@@ -72,16 +92,12 @@ class Psi:
         """
         if qubit > self.num_qubits:
             raise ValueError("Qubit %s not in system" % qubit)
-        # go through each amplitude
-        for i in range(1 << self.num_qubits):
-            # find out whether that amplitude corresponds to the qubit being
-            # zero or one
-            # for example psi_010 would be i bit shifted for the 2nd bit
-            # in this case, bit two has a 1, so let's multiply it's amplitude
-            if (i >> qubit) % 2 == 0:  # if zero
-                self.amplitudes[i] *= exp(-1j * pi / 8)
-            else:  # if one
-                self.amplitudes[i] *= exp(1j * pi / 8)
+        for state in self.states:
+            if state[qubit-1] is '0': # given qubit is 0 in this possible state
+                self.states[state] *= exp(-1j * pi / 8)
+            else: # given q bit is 1 in this possible state
+                self.states[state] *= exp(1j * pi / 8)
+        return
 
     def hadamard(self, qubit):
         """
@@ -89,27 +105,29 @@ class Psi:
         """
         if qubit > self.num_qubits:
             raise ValueError("Qubit %s not in system" % qubit)
-        # make a copy of amplitudes as they update simultaneously
-        old_amplitudes = self.amplitudes[:]
-        # go through each amplitude
-        for i in range(1 << self.num_qubits):
-            # find out whether that amplitude corresponds to the qubit being
-            if (i >> qubit) % 2 == 0:  # if zero
-                self.amplitudes[i] = (old_amplitudes[i] - old_amplitudes[i + (1 << qubit)]) / sqrt(2)
-            else:  # if one
-                self.amplitudes[i] = (old_amplitudes[i - (1 << qubit)] - old_amplitudes[i]) / sqrt(2)
+        # make complete copy as values update simultaneously
+        copy = {k:v for k,v in self.states.items()}
+        for state in self.states.keys():
+            if state[qubit-1] is '0': # given qubit is 0 in this possible state
+                print(state)
+                self.states[state] = (copy[state] + copy[bitflip(state, qubit)]) / sqrt(2)
+            else: # given qubit is 1 in this possible state
+                self.states[state] = (copy[bitflip(state, qubit)] - copy[state]) / sqrt(2)
 
-    def controlled_not(self, qubit1, qubit2):
+    def controlled_not(self, control, target):
         """
         applies a controlled-not gate using the first given qubit as the
         control of the permutation of the second.
         """
-        # the two quibits have to valid and different
-        if qubit1 > self.num_qubits or qubit2 > self.num_qubits or qubit1 == qubit2:
+        # the two qubits have to valid and different
+        if control > self.num_qubits or target > self.num_qubits:
             raise ValueError("Qubit %s not in system" % qubit)
-        # make a copy of amplitudes as they update simultaneously
-        old_amplitudes = self.amplitudes[:]
-        # go through each amplitude
-        for i in range(1 << self.num_qubits):
-            # permutate qubit2 based on value of qubit1
-            self.amplitudes[i ^ (((i >> qubit1) % 2) << qubit2)] = old_amplitudes[i]
+        if control == target:
+            raise ValueError("controlled not using the same bit for both inputs")
+
+        copy = {k:v for k,v in self.states.items()}
+        for state in self.states.keys():
+            if state[control-1] is '0': pass
+            else: # control is 1, flip amplitude of target
+                print(state) # FIXME
+                self.states[state] = copy[bitflip(state, target)]
